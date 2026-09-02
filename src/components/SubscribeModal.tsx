@@ -152,9 +152,9 @@ export function Toast() {
     return () => window.removeEventListener("hrmatics:toast", handler);
   }, []);
 
-  return (
-    <div className={`toast${visible ? " show" : ""}`} role="status">
+  return visible ? (
+    <div className="toast show" role="status">
       <PulseIcon /> <span>{message}</span>
     </div>
-  );
+  ) : null;
 }
