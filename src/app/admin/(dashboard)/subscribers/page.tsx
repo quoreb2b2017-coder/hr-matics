@@ -70,7 +70,7 @@ export default async function AdminSubscribersPage() {
                     </td>
                     <td>
                       {interests.length === 0 ? (
-                        <span className="admin-td-sub">All CFOmatics stories</span>
+                        <span className="admin-td-sub">All HRmatics stories</span>
                       ) : (
                         <ul className="admin-sub-blogs">
                           {interests.map((interest) => (
@@ -81,7 +81,7 @@ export default async function AdminSubscribersPage() {
                                 </Link>
                               ) : (
                                 <span>
-                                  {interest.topic_name || "All CFOmatics stories"}
+                                  {interest.topic_name || "All HRmatics stories"}
                                 </span>
                               )}
                               {interest.topic_name && interest.article_title ? (

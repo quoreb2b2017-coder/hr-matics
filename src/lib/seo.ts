@@ -43,8 +43,8 @@ export function clampMetaTitle(input: string): string {
   let value = input.replace(/\s+/g, " ").trim();
   if (!value) return value;
 
-  if (/\|\s*CFOmatics\s*$/i.test(value)) {
-    const core = value.replace(/\s*\|\s*CFOmatics\s*$/i, "").trim();
+  if (/\|\s*(CFOmatics|HRmatics)\s*$/i.test(value)) {
+    const core = value.replace(/\s*\|\s*(CFOmatics|HRmatics)\s*$/i, "").trim();
     const coreMax = Math.max(8, max - META_TITLE_BRAND.length);
     return `${clampToLimit(core, coreMax)}${META_TITLE_BRAND}`;
   }

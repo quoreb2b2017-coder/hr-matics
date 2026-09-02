@@ -26,7 +26,7 @@ function hash(seed: string): number {
 }
 
 function labelText(label?: string | null) {
-  if (!label) return "CFOMATICS";
+  if (!label) return "HRMATICS";
   return label.replace(/&/g, "&amp;").toUpperCase().slice(0, 22);
 }
 
@@ -80,7 +80,7 @@ export default function CoverArt({
   seed: string;
   label?: string | null;
 }) {
-  const h = hash(seed || "cfomatics");
+  const h = hash(seed || "hrmatics");
   const palette = PALETTES[h % PALETTES.length];
   const styles: Style[] = [
     "line",

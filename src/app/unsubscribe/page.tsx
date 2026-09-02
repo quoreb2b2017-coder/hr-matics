@@ -5,7 +5,7 @@ import SiteFooter from "@/components/SiteFooter";
 import { unsubscribeByToken } from "@/lib/subscribers";
 
 export const metadata: Metadata = {
-  title: "Unsubscribe - CFOmatics",
+  title: "Unsubscribe - HRmatics",
   robots: { index: false, follow: false },
 };
 
@@ -27,12 +27,12 @@ export default async function UnsubscribePage({
         </h1>
         <p style={{ color: "var(--ink-2)", marginTop: 12, fontSize: 18 }}>
           {ok
-            ? "You will no longer get related-article emails from CFOmatics. You can subscribe again from any story."
+            ? "You will no longer get related-article emails from HRmatics. You can subscribe again from any story."
             : "This unsubscribe link is missing or expired. If you still receive emails, reply to that message and we will take you off the list."}
         </p>
         <p style={{ marginTop: 24 }}>
           <Link href="/" className="btn btn-solid">
-            Back to CFOmatics
+            Back to HRmatics
           </Link>
         </p>
       </div>

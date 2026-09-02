@@ -228,7 +228,7 @@ export default function ArticleForm({
               setFocusKeyword(e.target.value.slice(0, SEO_LIMITS.focusKeyword))
             }
             maxLength={SEO_LIMITS.focusKeyword}
-            placeholder="e.g. CFO succession planning"
+            placeholder="e.g. pay transparency laws"
           />
         </div>
         <div className="field">
@@ -247,8 +247,8 @@ export default function ArticleForm({
             placeholder="Comma-separated, 5-8 phrases"
           />
           <span className="field-hint">
-            Max {SEO_LIMITS.keywords} characters. Example: CFO succession,
-            finance leadership, interim CFO
+            Max {SEO_LIMITS.keywords} characters. Example: pay transparency,
+            talent acquisition, total rewards
           </span>
         </div>
         <div className="field">
@@ -264,7 +264,7 @@ export default function ArticleForm({
               setMetaTitle(e.target.value.slice(0, SEO_LIMITS.metaTitle))
             }
             maxLength={SEO_LIMITS.metaTitle}
-            placeholder="Keyword first, end with | CFOmatics"
+            placeholder="Keyword first, end with | HRmatics"
           />
         </div>
         <div className="field">
@@ -309,7 +309,7 @@ export default function ArticleForm({
           <p className="seo-preview-title">
             {metaTitle || title || "Meta title"}
           </p>
-          <p className="seo-preview-url">cfomatics.com › article › slug</p>
+          <p className="seo-preview-url">hrmatics.com › article › slug</p>
           <p className="seo-preview-desc">
             {metaDescription || "Meta description appears here."}
           </p>

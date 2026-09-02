@@ -21,7 +21,7 @@ export default function LoginForm({ next }: { next: string }) {
           name="email"
           type="email"
           autoComplete="email"
-          placeholder="you@cfomatics.com"
+          placeholder="you@hrmatics.com"
           required
           autoFocus
         />

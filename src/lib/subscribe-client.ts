@@ -1,4 +1,4 @@
-export const SUBSCRIBED_KEY = "cfomatics_subscribed";
+export const SUBSCRIBED_KEY = "hrmatics_subscribed";
 
 export type SubscribePayload = {
   email: string;
