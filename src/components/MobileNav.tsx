@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { getNavTopics } from "@/lib/topic-config";
 
 export default function MobileNav({
@@ -10,12 +11,19 @@ export default function MobileNav({
   currentTopicSlug?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const navTopics = getNavTopics();
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = prev;
     };
   }, [open]);
 
@@ -27,11 +35,86 @@ export default function MobileNav({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  const panel = open && mounted
+    ? createPortal(
+        <div className="mnav-root" role="dialog" aria-modal="true" aria-label="Site menu">
+          <button
+            type="button"
+            className="mnav-backdrop"
+            aria-label="Close menu"
+            onClick={() => setOpen(false)}
+          />
+          <aside className="mnav-panel">
+            <div className="mnav-panel-head">
+              <span className="mnav-panel-title">Browse</span>
+              <button
+                type="button"
+                className="mnav-close"
+                aria-label="Close menu"
+                onClick={() => setOpen(false)}
+              >
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  aria-hidden
+                >
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+            </div>
+            <nav className="mnav-links">
+              <Link href="/" className="mnav-link" onClick={() => setOpen(false)}>
+                Home
+              </Link>
+              {navTopics.map((topic) => (
+                <Link
+                  key={topic.slug}
+                  href={`/topic/${topic.slug}`}
+                  className={`mnav-link${
+                    currentTopicSlug === topic.slug ? " active" : ""
+                  }`}
+                  onClick={() => setOpen(false)}
+                >
+                  {topic.navLabel}
+                </Link>
+              ))}
+              <Link
+                href="/resources"
+                className="mnav-link"
+                onClick={() => setOpen(false)}
+              >
+                Resources
+              </Link>
+              <Link
+                href="/about"
+                className="mnav-link"
+                onClick={() => setOpen(false)}
+              >
+                About
+              </Link>
+            </nav>
+            <Link
+              href="/#nl"
+              className="mnav-cta"
+              onClick={() => setOpen(false)}
+            >
+              Subscribe
+            </Link>
+          </aside>
+        </div>,
+        document.body,
+      )
+    : null;
+
   return (
     <div className="mobile-nav">
       <button
         type="button"
-        className="icon-btn hamburger"
+        className={`icon-btn hamburger${open ? " is-open" : ""}`}
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
@@ -45,56 +128,14 @@ export default function MobileNav({
           strokeWidth="2"
           aria-hidden
         >
-          <path d="M3 6h18M3 12h18M3 18h18" />
+          {open ? (
+            <path d="M6 6l12 12M18 6L6 18" />
+          ) : (
+            <path d="M3 6h18M3 12h18M3 18h18" />
+          )}
         </svg>
       </button>
-
-      <aside
-        className={`drawer${open ? " open" : ""}`}
-        aria-hidden={!open}
-        aria-label="Site menu"
-      >
-        <button
-          type="button"
-          className="drawer-close"
-          aria-label="Close menu"
-          onClick={() => setOpen(false)}
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden
-          >
-            <path d="M6 6l12 12M18 6L6 18" />
-          </svg>
-        </button>
-        {navTopics.map((topic) => (
-          <Link
-            key={topic.slug}
-            href={`/topic/${topic.slug}`}
-            className={`drawer-link${
-              currentTopicSlug === topic.slug ? " active" : ""
-            }`}
-            onClick={() => setOpen(false)}
-          >
-            {topic.navLabel}
-          </Link>
-        ))}
-        <button
-          type="button"
-          className="btn-sub"
-          onClick={() => {
-            setOpen(false);
-            window.location.href = "/#nl";
-          }}
-        >
-          Subscribe
-        </button>
-      </aside>
+      {panel}
     </div>
   );
 }
