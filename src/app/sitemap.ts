@@ -73,7 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: fresh ? "daily" : "weekly",
       priority: fresh ? 0.9 : 0.7,
       ...(a.cover_image_url && {
-        images: [{ url: a.cover_image_url, title: a.title }],
+        images: [a.cover_image_url],
       }),
     };
   });
