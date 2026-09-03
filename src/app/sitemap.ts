@@ -72,9 +72,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: lastMod(a.updated_at) ?? publishedAt,
       changeFrequency: fresh ? "daily" : "weekly",
       priority: fresh ? 0.9 : 0.7,
-      ...(a.cover_image_url && {
-        images: [a.cover_image_url],
-      }),
+
     };
   });
 
