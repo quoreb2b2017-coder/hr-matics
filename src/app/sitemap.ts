@@ -4,8 +4,8 @@ import { getNavTopics } from "@/lib/topic-config";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isMissingSchemaError } from "@/lib/db-errors";
 
-/** Rebuild at least every minute; publish paths also call revalidateSitemap(). */
-export const revalidate = 60;
+/** Rebuild every 5 minutes; publish paths also call revalidateSitemap(). */
+export const revalidate = 300;
 
 function lastMod(iso: string | null | undefined): Date | undefined {
   if (!iso) return undefined;
@@ -20,15 +20,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const [{ data: articles, error: articlesError }, { data: topics, error: topicsError }] =
     await Promise.all([
-    supabase
-      .from("articles")
-      .select("slug, updated_at, published_at")
-      .eq("status", "published")
-      .not("published_at", "is", null)
-      .lte("published_at", nowIso)
-      .order("published_at", { ascending: false }),
-    supabase.from("topics").select("slug").order("name"),
-  ]);
+      supabase
+        .from("articles")
+        .select("slug, updated_at, published_at, cover_image_url, title")
+        .eq("status", "published")
+        .not("published_at", "is", null)
+        .lte("published_at", nowIso)
+        .order("published_at", { ascending: false }),
+      supabase.from("topics").select("slug").order("name"),
+    ]);
 
   const published = isMissingSchemaError(articlesError) ? [] : (articles ?? []);
   const topicSlugs = isMissingSchemaError(topicsError)
@@ -72,6 +72,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: lastMod(a.updated_at) ?? publishedAt,
       changeFrequency: fresh ? "daily" : "weekly",
       priority: fresh ? 0.9 : 0.7,
+      ...(a.cover_image_url && {
+        images: [{ url: a.cover_image_url, title: a.title }],
+      }),
     };
   });
 
