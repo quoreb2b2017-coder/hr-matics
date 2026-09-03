@@ -76,5 +76,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  return [...staticPages, ...topicPages, ...articlePages];
+  return [...staticPages, ...topicPages, ...articlePages].map((entry) => ({
+    ...entry,
+    url: entry.url.replace(/\s+/g, ""),
+  }));
 }
