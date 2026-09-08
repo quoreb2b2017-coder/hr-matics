@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, JetBrains_Mono, Libre_Franklin } from "next/font/google";
+import AlliAiScript from "@/components/AlliAiScript";
 import ClientEffects from "@/components/ClientEffects";
 import SubscribeModal, { Toast } from "@/components/SubscribeModal";
 import JsonLd from "@/components/JsonLd";
@@ -74,13 +75,8 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${fraunces.variable} ${libreFranklin.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          type="text/javascript"
-          src="data:text/javascript;base64,LyogQWxsaSBBSSB3aWRnZXQgZm9yIHd3dy5ocm1hdGljcy5uZXQgKi8KKGZ1bmN0aW9uICh3LGQscyxvLGYsanMsZmpzKSB7d1snQWxsaUpTV2lkZ2V0J109bzt3W29dID0gd1tvXSB8fCBmdW5jdGlvbiAoKSB7ICh3W29dLnEgPSB3W29dLnEgfHwgW10pLnB1c2goYXJndW1lbnRzKSB9O2pzID0gZC5jcmVhdGVFbGVtZW50KHMpLCBmanMgPSBkLmdldEVsZW1lbnRzQnlUYWdOYW1lKHMpWzBdO2pzLmlkID0gbzsganMuc3JjID0gZjsganMuYXN5bmMgPSAxOyBmanMucGFyZW50Tm9kZS5pbnNlcnRCZWZvcmUoanMsIGZqcyk7fSh3aW5kb3csIGRvY3VtZW50LCAnc2NyaXB0JywgJ2FsbGknLCAnaHR0cHM6Ly9zdGF0aWMuYWxsaWFpLmNvbS93aWRnZXQvdjEuanMnKSk7YWxsaSgnaW5pdCcsICdzaXRlX3dQbnROMzRnUlhnWVRBclknKTthbGxpKCdvcHRpbWl6ZScsICdhbGwnKTs="
-        />
-      </head>
       <body className="min-h-full flex flex-col bg-paper text-ink">
+        <AlliAiScript />
         <JsonLd
           data={{
             "@context": "https://schema.org",
