@@ -99,7 +99,7 @@ export default function SiteFooter() {
             {" · "}
             <Link href="/about#standards">Terms</Link>
           </span>
-          <span className="pubnote">A Demandmatics media property</span>
+          <span className="pubnote">Published by Quore B2B Marketing.</span>
         </div>
       </div>
     </footer>
