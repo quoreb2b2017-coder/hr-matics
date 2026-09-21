@@ -38,6 +38,16 @@ export const metadata: Metadata = {
   },
   description:
     "Intelligence, news, and playbooks for the people who run people operations. Compliance, talent, total rewards, HR technology, and culture, decoded for HR leaders.",
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        {
+          url: "/feed.xml",
+          title: "HRmatics RSS",
+        },
+      ],
+    },
+  },
   robots: {
     index: true,
     follow: true,
