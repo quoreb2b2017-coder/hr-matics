@@ -1,31 +1,26 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import { Fraunces, JetBrains_Mono, Libre_Franklin } from "next/font/google";
 import AlliAiScript from "@/components/AlliAiScript";
 import ClientEffects from "@/components/ClientEffects";
+import CookieConsentShell from "@/components/CookieConsentShell";
 import SubscribeModal, { Toast } from "@/components/SubscribeModal";
 import JsonLd from "@/components/JsonLd";
 import { getSiteUrl } from "@/lib/site";
 import "./globals.css";
-
-const CookieConsentChrome = dynamic(
-  () => import("@/components/CookieConsentChrome"),
-  { ssr: false },
-);
 
 const SITE_URL = getSiteUrl();
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
   display: "swap",
 });
 
 const libreFranklin = Libre_Franklin({
   variable: "--font-libre",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -119,7 +114,7 @@ export default function RootLayout({
         <ClientEffects />
         <SubscribeModal />
         <Toast />
-        <CookieConsentChrome />
+        <CookieConsentShell />
       </body>
     </html>
   );

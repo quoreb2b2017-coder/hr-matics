@@ -21,13 +21,24 @@ import {
 } from "@/lib/site-analytics/sanitize";
 
 export type IngestResult =
-  | { ok: true }
+  | { ok: true; row: Record<string, unknown>; dualWriteConsent?: boolean }
   | { ok: false; status: number; detail: string };
 
-export async function ingestSiteAnalyticsEvent(
+/** Reuse one service-role client per process — avoids TLS/handshake per beacon. */
+let adminSingleton: ReturnType<typeof createAdminClient> | null = null;
+function db() {
+  if (!adminSingleton) adminSingleton = createAdminClient();
+  return adminSingleton;
+}
+
+/**
+ * Fast path: validate + build row only. Caller can respond immediately
+ * then persist via persistSiteAnalyticsRow().
+ */
+export function prepareSiteAnalyticsEvent(
   request: Request,
   body: Record<string, unknown>,
-): Promise<IngestResult> {
+): IngestResult {
   pruneRateLimitBuckets();
 
   const ip = resolveClientIp(request);
@@ -94,7 +105,6 @@ export async function ingestSiteAnalyticsEvent(
       ? sanitizeCustomMeta(body.customMeta || body.custom)
       : {};
 
-  const db = createAdminClient();
   const row = {
     kind,
     session_id: sessionId,
@@ -104,47 +114,94 @@ export async function ingestSiteAnalyticsEvent(
     consent_snapshot: consentSnapshot,
     marketing_meta: marketingMeta,
     custom_meta: customMeta,
+    _geo_country: geo.country || null,
+    _pseudo_ip: pseudoIp,
+    _consent_status: consentStatus,
+    _analytics: analytics,
+    _marketing: marketing,
   };
 
-  // No .select() — return as soon as insert is acknowledged.
-  const { error } = await db.from("site_analytics_events").insert(row);
+  return {
+    ok: true,
+    row,
+    dualWriteConsent: kind === "consent",
+  };
+}
 
+export async function persistSiteAnalyticsRow(
+  prepared: Extract<IngestResult, { ok: true }>,
+): Promise<void> {
+  const {
+    _geo_country,
+    _pseudo_ip,
+    _consent_status,
+    _analytics,
+    _marketing,
+    ...row
+  } = prepared.row as Record<string, unknown> & {
+    _geo_country?: string | null;
+    _pseudo_ip?: string | null;
+    _consent_status?: string | null;
+    _analytics?: boolean;
+    _marketing?: boolean;
+  };
+
+  const client = db();
+  const insertRow = {
+    kind: row.kind as "page_view" | "consent" | "custom",
+    session_id: String(row.session_id),
+    path: (row.path as string | null) ?? null,
+    referrer: (row.referrer as string | null) ?? null,
+    user_agent: (row.user_agent as string | null) ?? null,
+    consent_snapshot: (row.consent_snapshot as Record<string, unknown>) || {},
+    marketing_meta: (row.marketing_meta as Record<string, unknown>) || {},
+    custom_meta: (row.custom_meta as Record<string, unknown>) || {},
+  };
+
+  const { error } = await client.from("site_analytics_events").insert(insertRow);
   if (error) {
     console.warn("[site-analytics] insert failed:", error.message);
-    return { ok: false, status: 503, detail: error.message };
+    return;
   }
 
-  if (kind === "consent") {
-    const choice =
-      consentSnapshot.choice === "accept_all" ||
-      consentSnapshot.choice === "reject_all" ||
-      consentSnapshot.choice === "custom"
-        ? consentSnapshot.choice
-        : analytics && marketing
-          ? "accept_all"
-          : !analytics && !marketing
-            ? "reject_all"
-            : "custom";
+  if (!prepared.dualWriteConsent) return;
 
-    // Fire-and-forget dual-write so consent response stays fast.
-    void db
-      .from("consent_events")
-      .insert({
-        choice,
-        necessary: true,
-        analytics,
-        marketing,
-        consent_version: 1,
-        session_id: sessionId,
-        path,
-        pseudonymized_ip: pseudoIp,
-        consent_status: consentStatus,
-        country: geo.country || null,
-      })
-      .then(({ error: e }) => {
-        if (e) console.warn("[consent_events] dual-write failed:", e.message);
-      });
-  }
+  const snap = insertRow.consent_snapshot;
+  const analytics = !!_analytics;
+  const marketing = !!_marketing;
+  const choice =
+    snap.choice === "accept_all" ||
+    snap.choice === "reject_all" ||
+    snap.choice === "custom"
+      ? snap.choice
+      : analytics && marketing
+        ? "accept_all"
+        : !analytics && !marketing
+          ? "reject_all"
+          : "custom";
 
+  const { error: e } = await client.from("consent_events").insert({
+    choice,
+    necessary: true,
+    analytics,
+    marketing,
+    consent_version: 1,
+    session_id: insertRow.session_id,
+    path: insertRow.path,
+    pseudonymized_ip: _pseudo_ip || null,
+    consent_status: _consent_status || null,
+    country: _geo_country || null,
+  });
+  if (e) console.warn("[consent_events] dual-write failed:", e.message);
+}
+
+/** Sync helper (tests / fallback). Prefer prepare + after(persist). */
+export async function ingestSiteAnalyticsEvent(
+  request: Request,
+  body: Record<string, unknown>,
+): Promise<Exclude<IngestResult, { ok: true }> | { ok: true }> {
+  const prepared = prepareSiteAnalyticsEvent(request, body);
+  if (!prepared.ok) return prepared;
+  await persistSiteAnalyticsRow(prepared);
   return { ok: true };
 }

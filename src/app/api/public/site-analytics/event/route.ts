@@ -1,8 +1,17 @@
+import { after } from "next/server";
 import { NextResponse } from "next/server";
-import { ingestSiteAnalyticsEvent } from "@/lib/site-analytics/ingest";
+import {
+  persistSiteAnalyticsRow,
+  prepareSiteAnalyticsEvent,
+} from "@/lib/site-analytics/ingest";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
+/**
+ * Respond in ~few ms after validation; DB write continues via after().
+ * Client uses sendBeacon — does not wait for insert RTT.
+ */
 export async function POST(request: Request) {
   let body: Record<string, unknown> = {};
   try {
@@ -11,13 +20,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ detail: "Invalid JSON" }, { status: 400 });
   }
 
-  const result = await ingestSiteAnalyticsEvent(request, body);
-  if (!result.ok) {
+  const prepared = prepareSiteAnalyticsEvent(request, body);
+  if (!prepared.ok) {
     return NextResponse.json(
-      { detail: result.detail },
-      { status: result.status },
+      { detail: prepared.detail },
+      { status: prepared.status },
     );
   }
 
-  return NextResponse.json({ ok: true });
+  after(() => persistSiteAnalyticsRow(prepared));
+
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      "Cache-Control": "no-store",
+    },
+  });
 }
