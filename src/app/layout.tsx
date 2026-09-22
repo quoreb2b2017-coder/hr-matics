@@ -86,7 +86,10 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${fraunces.variable} ${libreFranklin.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-paper text-ink">
+      <body
+        className="min-h-full flex flex-col bg-paper text-ink"
+        suppressHydrationWarning
+      >
         <AlliAiScript />
         <JsonLd
           data={{

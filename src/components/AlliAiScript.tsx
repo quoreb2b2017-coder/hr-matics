@@ -1,13 +1,12 @@
 import Script from "next/script";
 
 /**
- * Alli AI SEO automation widget (www.hrmatics.net).
- * Loads in <head> on every page via beforeInteractive.
- * Only applies pre-approved recommendations from the Alli dashboard.
+ * Alli AI SEO widget. Load AFTER hydration so it cannot mutate <body>
+ * (data-a11i-enabled) before React hydrates — that caused mismatches.
  */
 export default function AlliAiScript() {
   return (
-    <Script id="alli-ai-widget" strategy="beforeInteractive">
+    <Script id="alli-ai-widget" strategy="lazyOnload">
       {`(function (w,d,s,o,f,js,fjs) {
   w['AlliJSWidget']=o;
   w[o]=w[o]||function(){(w[o].q=w[o].q||[]).push(arguments)};

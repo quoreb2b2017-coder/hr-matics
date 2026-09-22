@@ -1,20 +1,65 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { isMissingSchemaError } from "@/lib/db-errors";
 import { HR_TOPIC_SLUGS } from "@/lib/topic-config";
-import { normalizeDashesDeep } from "@/lib/text";
+import { normalizeDashes, normalizeDashesDeep } from "@/lib/text";
 import type { ArticleWithTopic } from "@/types/database";
 
 const PUBLISHED_SELECT = "*, topic:topics(*)";
 
+/** Slim columns for listing cards — skip body_json (huge) on homepage/ISR. */
+const LIST_SELECT =
+  "id, slug, title, dek, topic_id, status, cover_image_url, cover_image_alt, read_time_minutes, author_name, published_at, created_at, updated_at, topic:topics(id, slug, name, description, created_at)";
+
 function sanitizeArticle(article: ArticleWithTopic): ArticleWithTopic {
   return normalizeDashesDeep(article);
+}
+
+function sanitizeListArticle(article: ArticleWithTopic): ArticleWithTopic {
+  return {
+    ...article,
+    title: normalizeDashes(article.title),
+    dek: normalizeDashes(article.dek),
+    author_name: normalizeDashes(article.author_name),
+    body_json: article.body_json ?? {
+      lede: "",
+      sections: [],
+    },
+  };
 }
 
 /** Only HR navbar topics — drops legacy CFO-era rows if any remain in the DB. */
 function isHrArticle(article: ArticleWithTopic): boolean {
   return Boolean(article.topic?.slug && HR_TOPIC_SLUGS.has(article.topic.slug));
 }
+
+/**
+ * Cookie-less anon client for ISR pages (home/sitemap). Faster than
+ * createClient() which awaits cookies() and forces dynamic rendering.
+ */
+export const getLatestArticlesPublic = cache(
+  async (limit = 20): Promise<ArticleWithTopic[]> => {
+    const supabase = createPublicClient();
+    const { data, error } = await supabase
+      .from("articles")
+      .select(LIST_SELECT)
+      .eq("status", "published")
+      .not("published_at", "is", null)
+      .order("published_at", { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      if (!isMissingSchemaError(error)) {
+        console.error("getLatestArticlesPublic failed:", error.message);
+      }
+      return [];
+    }
+    return ((data ?? []) as unknown as ArticleWithTopic[])
+      .filter(isHrArticle)
+      .map(sanitizeListArticle);
+  },
+);
 
 export const getLatestArticles = cache(
   async (limit = 20): Promise<ArticleWithTopic[]> => {
