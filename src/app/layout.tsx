@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Fraunces, JetBrains_Mono, Libre_Franklin } from "next/font/google";
 import AlliAiScript from "@/components/AlliAiScript";
 import ClientEffects from "@/components/ClientEffects";
@@ -6,6 +7,11 @@ import SubscribeModal, { Toast } from "@/components/SubscribeModal";
 import JsonLd from "@/components/JsonLd";
 import { getSiteUrl } from "@/lib/site";
 import "./globals.css";
+
+const CookieConsentChrome = dynamic(
+  () => import("@/components/CookieConsentChrome"),
+  { ssr: false },
+);
 
 const SITE_URL = getSiteUrl();
 
@@ -113,6 +119,7 @@ export default function RootLayout({
         <ClientEffects />
         <SubscribeModal />
         <Toast />
+        <CookieConsentChrome />
       </body>
     </html>
   );

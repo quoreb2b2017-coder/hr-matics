@@ -1,5 +1,6 @@
 import Link from "next/link";
 import BrandLogo from "@/components/BrandLogo";
+import CookiePreferencesTrigger from "@/components/CookiePreferencesTrigger";
 import { getNavTopics } from "@/lib/topic-config";
 
 export default function SiteFooter() {
@@ -86,8 +87,9 @@ export default function SiteFooter() {
               <h5>Readers</h5>
               <Link href="/#nl">Newsletter</Link>
               <Link href="/topic/playbooks">Playbooks</Link>
-              <Link href="/about#standards">Privacy</Link>
-              <Link href="/about#standards">Terms</Link>
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/privacy#cookies">Cookies</Link>
+              <CookiePreferencesTrigger className="foot-cookie-prefs" />
             </div>
           </div>
         </div>
@@ -95,9 +97,11 @@ export default function SiteFooter() {
         <div className="foot-bottom">
           <span className="legal">
             © {year} HRmatics. Independent publication.{" "}
-            <Link href="/about#standards">Privacy</Link>
+            <Link href="/privacy">Privacy</Link>
             {" · "}
             <Link href="/about#standards">Terms</Link>
+            {" · "}
+            <CookiePreferencesTrigger className="foot-cookie-prefs" />
           </span>
           <span className="pubnote">Published by Quore B2B Marketing.</span>
         </div>
