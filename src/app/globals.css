@@ -2946,7 +2946,7 @@ a {
   padding: 28px 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 16px;
   position: fixed;
   top: var(--admin-nav-offset);
   left: 0;
@@ -2960,6 +2960,10 @@ a {
 .admin-sidebar-kicker {
   color: #37b98c;
   margin-bottom: 6px;
+}
+
+.admin-sidebar-head {
+  flex-shrink: 0;
 }
 
 .admin-sidebar-head strong {
@@ -2976,6 +2980,9 @@ a {
   flex-direction: column;
   gap: 2px;
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 2px;
 }
 
 .admin-nav-label {
@@ -3026,6 +3033,7 @@ a {
   margin-top: auto;
   padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
 }
 
 .admin-user {
@@ -3062,23 +3070,30 @@ a {
   word-break: break-all;
 }
 
+.admin-signout-form {
+  margin: 0;
+}
+
 .admin-signout {
   width: 100%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 38px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: transparent;
+  gap: 8px;
+  height: 40px;
+  border: 1px solid rgba(238, 106, 77, 0.45);
+  background: rgba(238, 106, 77, 0.12);
   color: #fff;
   border-radius: var(--r);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .admin-signout:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(238, 106, 77, 0.22);
+  border-color: var(--signal);
 }
 
 .admin-main {

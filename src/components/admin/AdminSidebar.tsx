@@ -134,9 +134,21 @@ export default function AdminSidebar({ email }: { email: string | undefined }) {
             {email && <p className="admin-sidebar-email">{email}</p>}
           </div>
         </div>
-        <form action={signOut}>
-          <button type="submit" className="admin-signout">
-            Sign out
+        <form action={signOut} className="admin-signout-form">
+          <button type="submit" className="admin-signout" data-testid="admin-logout">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              width="16"
+              height="16"
+              aria-hidden
+            >
+              <path d="M10 7V5a2 2 0 0 1 2-2h7v18h-7a2 2 0 0 1-2-2v-2" />
+              <path d="M15 12H3m0 0l3-3m-3 3l3 3" />
+            </svg>
+            Logout
           </button>
         </form>
       </div>
