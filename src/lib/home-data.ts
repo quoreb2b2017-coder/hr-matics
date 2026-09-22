@@ -1,5 +1,5 @@
 import { getNavTopics } from "@/lib/topic-config";
-import { getLatestArticles } from "@/lib/articles";
+import { getLatestArticlesPublic } from "@/lib/articles";
 import { articlesToStories, type TopicStory } from "@/lib/topic-stories";
 import type { TopicConfig } from "@/lib/topic-config";
 
@@ -19,11 +19,10 @@ export type HomePageData = {
 export async function getHomePageData(): Promise<HomePageData> {
   const navTopics = getNavTopics().filter((t) => t.slug !== "playbooks");
 
-  // Single DB query instead of N+1 per-topic queries
-  const allArticles = await getLatestArticles(60);
+  // Public client + slim columns (no body_json) — keeps ISR fast
+  const allArticles = await getLatestArticlesPublic(40);
   const allStories = articlesToStories(allArticles);
 
-  // Group by topic slug in memory
   const byTopic = new Map<string, TopicStory[]>();
   for (const story of allStories) {
     const slug = story.topicSlug ?? "";
@@ -34,7 +33,10 @@ export async function getHomePageData(): Promise<HomePageData> {
   }
 
   const topicSections: HomeTopicSection[] = navTopics
-    .map((config) => ({ config, stories: (byTopic.get(config.slug) ?? []).slice(0, 3) }))
+    .map((config) => ({
+      config,
+      stories: (byTopic.get(config.slug) ?? []).slice(0, 3),
+    }))
     .filter((s) => s.stories.length > 0);
 
   const lead = allStories[0] ?? null;
