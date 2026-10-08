@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { SUBSCRIBED_KEY, submitSubscribe } from "@/lib/subscribe-client";
 
 function PulseIcon({ live = false }: { live?: boolean }) {
   return (
@@ -15,6 +16,8 @@ function PulseIcon({ live = false }: { live?: boolean }) {
 
 export default function SubscribeModal() {
   const [open, setOpen] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState("Get the resource");
   const [description, setDescription] = useState(
     "Tell us where to send it. You will also get The Brief, our weekday newsletter for HR leaders.",
@@ -34,6 +37,7 @@ export default function SubscribeModal() {
           "The weekday newsletter HR leaders read before the first meeting. Free.",
         );
       }
+      setError(null);
       setOpen(true);
     };
 
@@ -56,23 +60,38 @@ export default function SubscribeModal() {
     };
   }, [open]);
 
-  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const email = (
       form.elements.namedItem("email") as HTMLInputElement
     ).value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      window.alert("Enter a valid work email");
+      setError("Enter a valid work email.");
       return;
     }
-    form.reset();
-    setOpen(false);
-    window.dispatchEvent(
-      new CustomEvent("hrmatics:toast", {
-        detail: { message: "Sent. Watch your inbox in the next few minutes." },
-      }),
-    );
+
+    setPending(true);
+    setError(null);
+    try {
+      await submitSubscribe({ email, source: "navbar" });
+      try {
+        window.localStorage.setItem(SUBSCRIBED_KEY, "1");
+      } catch {
+        // ignore
+      }
+      form.reset();
+      setOpen(false);
+      window.dispatchEvent(
+        new CustomEvent("hrmatics:toast", {
+          detail: { message: "You're subscribed. Watch your inbox for The Brief." },
+        }),
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not subscribe. Try again.");
+    } finally {
+      setPending(false);
+    }
   };
 
   if (!open) return null;
@@ -123,10 +142,17 @@ export default function SubscribeModal() {
             aria-label="Work email"
             required
             autoComplete="email"
+            autoFocus
+            disabled={pending}
           />
-          <button className="modal-submit" type="submit">
-            Subscribe free
+          <button className="modal-submit" type="submit" disabled={pending}>
+            {pending ? "Saving…" : "Subscribe free"}
           </button>
+          {error && (
+            <p className="modal-error" role="alert">
+              {error}
+            </p>
+          )}
           <p className="modal-fine">
             Free. Unsubscribe anytime. We only send the weekday brief.
           </p>

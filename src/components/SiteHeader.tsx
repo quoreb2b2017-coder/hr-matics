@@ -4,6 +4,7 @@ import BrandLogo from "@/components/BrandLogo";
 import MobileNav from "@/components/MobileNav";
 import HeaderSpacer from "@/components/HeaderSpacer";
 import FlagTicker from "@/components/FlagTicker";
+import SubscribeButton from "@/components/SubscribeButton";
 import { getNavTopics } from "@/lib/topic-config";
 
 function todayLabel() {
@@ -38,9 +39,7 @@ export default function SiteHeader({
             </span>
             <FlagTicker />
           </div>
-          <Link href="/#nl" className="flag-cta">
-            Get the brief →
-          </Link>
+          <SubscribeButton className="flag-cta">Get the brief →</SubscribeButton>
         </div>
       </div>
 
@@ -64,9 +63,7 @@ export default function SiteHeader({
           </nav>
           <div className="mast-actions">
             <SearchBar />
-            <Link href="/#nl" className="btn-sub desktop-only">
-              Subscribe
-            </Link>
+            <SubscribeButton className="btn-sub desktop-only" />
             <MobileNav currentTopicSlug={currentTopicSlug} />
           </div>
         </div>

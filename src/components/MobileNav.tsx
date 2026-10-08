@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import SubscribeButton from "@/components/SubscribeButton";
 import { getNavTopics } from "@/lib/topic-config";
 
 export default function MobileNav({
@@ -97,13 +98,10 @@ export default function MobileNav({
                 About
               </Link>
             </nav>
-            <Link
-              href="/#nl"
+            <SubscribeButton
               className="mnav-cta"
               onClick={() => setOpen(false)}
-            >
-              Subscribe
-            </Link>
+            />
           </aside>
         </div>,
         document.body,
