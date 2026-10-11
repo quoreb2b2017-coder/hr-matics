@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import BrandLogo from "@/components/BrandLogo";
 import SubscribeButton from "@/components/SubscribeButton";
 import { getNavTopics } from "@/lib/topic-config";
 
@@ -47,7 +48,7 @@ export default function MobileNav({
           />
           <aside className="mnav-panel">
             <div className="mnav-panel-head">
-              <span className="mnav-panel-title">Browse</span>
+              <BrandLogo />
               <button
                 type="button"
                 className="mnav-close"
@@ -68,6 +69,7 @@ export default function MobileNav({
               </button>
             </div>
             <nav className="mnav-links">
+              <span className="mnav-label">Desks</span>
               <Link href="/" className="mnav-link" onClick={() => setOpen(false)}>
                 Home
               </Link>
