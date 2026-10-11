@@ -8,6 +8,30 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "How HRmatics collects, uses, and protects information — including cookies, first-party analytics, and your privacy choices.",
+  openGraph: {
+    title: "Privacy Policy",
+    description:
+      "How HRmatics collects, uses, and protects information — including cookies, first-party analytics, and your privacy choices.",
+    url: "/privacy",
+    siteName: "HRmatics",
+    type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "HRmatics",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy",
+    description:
+      "How HRmatics collects, uses, and protects information, including cookies and analytics.",
+    images: ["/twitter-image"],
+  },
 };
 
 export default function PrivacyPage() {

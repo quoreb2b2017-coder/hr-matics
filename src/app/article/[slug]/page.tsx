@@ -15,7 +15,7 @@ import {
   getArticlesByTopicSlug,
   getLatestArticles,
 } from "@/lib/articles";
-import { parseKeywordList, hydrateArticleSeo } from "@/lib/seo";
+import { parseKeywordList, hydrateArticleSeo, documentTitle } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/site";
 
 export const revalidate = 300;
@@ -41,8 +41,10 @@ export async function generateMetadata({
     article.topic?.name,
   ].filter((k, i, arr): k is string => Boolean(k) && arr.indexOf(k) === i);
 
+  const imageAlt = article.cover_image_alt || article.title;
+
   return {
-    title,
+    title: { absolute: documentTitle(title) },
     description,
     keywords: keywordList.length ? keywordList : undefined,
     alternates: { canonical: url },
@@ -58,20 +60,28 @@ export async function generateMetadata({
       authors: [article.author_name],
       section: article.topic?.name,
       tags: keywordList.length ? keywordList : undefined,
-      images: article.cover_image_url
-        ? [
-            {
-              url: article.cover_image_url,
-              alt: article.cover_image_alt || article.title,
-            },
-          ]
-        : undefined,
+      images: [
+        {
+          url: `/article/${article.slug}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: imageAlt,
+          type: "image/png",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: ogTitle,
       description,
-      images: article.cover_image_url ? [article.cover_image_url] : undefined,
+      images: [
+        {
+          url: `/article/${article.slug}/twitter-image`,
+          width: 1200,
+          height: 630,
+          alt: imageAlt,
+        },
+      ],
     },
   };
 }

@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { pexelsPhotoKey, searchPexelsPhoto } from "@/lib/ai/pexels";
-import { revalidateSitemap } from "@/lib/site";
+import { revalidatePublicArticle, revalidateSitemap } from "@/lib/site";
 
 export const maxDuration = 300;
 
@@ -153,7 +153,7 @@ export async function POST(request: Request) {
           ? "filled-missing"
           : "replaced-duplicate",
     });
-    revalidatePath(`/article/${article.slug}`);
+    revalidatePublicArticle(article.slug);
   }
 
   revalidatePath("/");

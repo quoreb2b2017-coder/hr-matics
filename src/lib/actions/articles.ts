@@ -11,7 +11,7 @@ import {
   clampMetaTitle,
   clampToLimit,
 } from "@/lib/seo";
-import { revalidateSitemap } from "@/lib/site";
+import { revalidatePublicArticle, revalidateSitemap } from "@/lib/site";
 import { notifySubscribersOfArticle } from "@/lib/subscribers";
 import type { ArticleBody, ArticleStatus } from "@/types/database";
 
@@ -140,6 +140,7 @@ export async function createArticle(formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/admin/articles");
+  revalidatePublicArticle(slug);
   revalidateSitemap();
   if (inserted?.status === "published" && inserted.id) {
     await notifySubscribersOfArticle(inserted.id);
@@ -178,8 +179,8 @@ export async function updateArticle(id: string, formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/admin/articles");
-  if (existing?.slug) revalidatePath(`/article/${existing.slug}`);
-  if (slug !== existing?.slug) revalidatePath(`/article/${slug}`);
+  if (existing?.slug) revalidatePublicArticle(existing.slug);
+  if (slug !== existing?.slug) revalidatePublicArticle(slug);
   revalidateSitemap();
   if (existing?.status !== "published" && fields.status === "published") {
     await notifySubscribersOfArticle(id);
@@ -200,7 +201,7 @@ export async function deleteArticle(id: string) {
 
   revalidatePath("/");
   revalidatePath("/admin/articles");
-  if (existing?.slug) revalidatePath(`/article/${existing.slug}`);
+  if (existing?.slug) revalidatePublicArticle(existing.slug);
   revalidateSitemap();
 }
 
@@ -224,7 +225,7 @@ export async function toggleArticleStatus(id: string, next: ArticleStatus) {
 
   revalidatePath("/");
   revalidatePath("/admin/articles");
-  if (existing?.slug) revalidatePath(`/article/${existing.slug}`);
+  if (existing?.slug) revalidatePublicArticle(existing.slug);
   revalidateSitemap();
   if (next === "published") {
     await notifySubscribersOfArticle(id);

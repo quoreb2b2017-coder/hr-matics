@@ -1,11 +1,11 @@
 import { cache } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { isMissingSchemaError } from "@/lib/db-errors";
 import { HR_TOPIC_SLUGS } from "@/lib/topic-config";
 import type { Topic } from "@/types/database";
 
 export const getTopics = cache(async (): Promise<Topic[]> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("topics")
     .select("*")
@@ -24,7 +24,7 @@ export const getTopicBySlug = cache(
   async (slug: string): Promise<Topic | null> => {
     if (!HR_TOPIC_SLUGS.has(slug)) return null;
 
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data, error } = await supabase
       .from("topics")
       .select("*")

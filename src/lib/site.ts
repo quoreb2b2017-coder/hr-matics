@@ -26,6 +26,14 @@ export function getSiteUrl(): string {
   return "http://localhost:3000";
 }
 
+/** Bust the public article page and its share images after publish or edit. */
+export function revalidatePublicArticle(slug: string) {
+  if (!slug) return;
+  revalidatePath(`/article/${slug}`);
+  revalidatePath(`/article/${slug}/opengraph-image`);
+  revalidatePath(`/article/${slug}/twitter-image`);
+}
+
 /** Bust cached sitemap + RSS after publish / unpublish / delete. */
 export function revalidateSitemap() {
   revalidatePath("/sitemap.xml");

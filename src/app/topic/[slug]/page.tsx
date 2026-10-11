@@ -10,6 +10,7 @@ import { getTopicConfig } from "@/lib/topic-config";
 import { getTopicBySlug } from "@/lib/topics";
 import { getArticlesByTopicSlug } from "@/lib/articles";
 import { articlesToStories, syntheticTopic } from "@/lib/topic-stories";
+import { getSiteUrl } from "@/lib/site";
 
 export const revalidate = 300;
 
@@ -22,9 +23,35 @@ export async function generateMetadata({
   const config = getTopicConfig(slug);
   if (!config) return {};
 
+  const url = `${getSiteUrl()}/topic/${slug}`;
+
   return {
     title: config.title,
     description: config.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: config.title,
+      description: config.description,
+      url,
+      siteName: "HRmatics",
+      locale: "en_US",
+      type: "website",
+      images: [
+        {
+          url: `/topic/${slug}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: config.title,
+          type: "image/png",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: config.title,
+      description: config.description,
+      images: [`/topic/${slug}/twitter-image`],
+    },
   };
 }
 

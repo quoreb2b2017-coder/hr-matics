@@ -1,5 +1,4 @@
 import { cache } from "react";
-import { createClient } from "@/lib/supabase/server";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isMissingSchemaError } from "@/lib/db-errors";
 import { HR_TOPIC_SLUGS } from "@/lib/topic-config";
@@ -63,7 +62,7 @@ export const getLatestArticlesPublic = cache(
 
 export const getLatestArticles = cache(
   async (limit = 20): Promise<ArticleWithTopic[]> => {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data, error } = await supabase
       .from("articles")
       .select(PUBLISHED_SELECT)
@@ -87,7 +86,7 @@ export const getArticlesByTopicSlug = cache(
   async (topicSlug: string, limit = 30): Promise<ArticleWithTopic[]> => {
     if (!HR_TOPIC_SLUGS.has(topicSlug)) return [];
 
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data: topic, error: topicError } = await supabase
       .from("topics")
       .select("id")
@@ -148,7 +147,7 @@ export function fillArticleRow(
 
 export const getArticleBySlug = cache(
   async (slug: string): Promise<ArticleWithTopic | null> => {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data, error } = await supabase
       .from("articles")
       .select(PUBLISHED_SELECT)

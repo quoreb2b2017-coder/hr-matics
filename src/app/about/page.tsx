@@ -3,9 +3,33 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "About - HRmatics",
+  title: "About",
   description:
     "HRmatics is a digital publication covering news and analysis for HR leaders and people operations teams.",
+  openGraph: {
+    title: "About HRmatics",
+    description:
+      "HRmatics is a digital publication covering news and analysis for HR leaders and people operations teams.",
+    url: "/about",
+    siteName: "HRmatics",
+    type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "HRmatics",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About HRmatics",
+    description:
+      "HRmatics is a digital publication covering news and analysis for HR leaders and people operations teams.",
+    images: ["/twitter-image"],
+  },
 };
 
 export default function Page() {

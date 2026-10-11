@@ -12,7 +12,7 @@ import {
 } from "@/lib/ai/generate-article";
 import { HR_NEWS_TOPIC_SLUGS } from "@/lib/topic-config";
 import { SEO_LIMITS, clampGeneratedSeoFields, clampToLimit } from "@/lib/seo";
-import { revalidateSitemap } from "@/lib/site";
+import { revalidatePublicArticle, revalidateSitemap } from "@/lib/site";
 import { notifySubscribersOfArticle } from "@/lib/subscribers";
 import { getHrNavbarTopics, syncHrTopicsToDb } from "@/lib/sync-topics";
 import type {
@@ -121,7 +121,7 @@ export async function persistGeneratedArticle(
   revalidatePath("/admin");
   revalidatePath("/admin/articles");
   revalidatePath(`/topic/${args.topic.slug}`);
-  revalidatePath(`/article/${inserted.slug}`);
+  revalidatePublicArticle(inserted.slug);
   revalidateSitemap();
   if (status === "published") {
     await notifySubscribersOfArticle(inserted.id);

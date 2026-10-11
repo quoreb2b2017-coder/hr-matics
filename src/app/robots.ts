@@ -27,6 +27,21 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/admin", "/admin/", "/api/"],
       },
+      {
+        userAgent: "LinkedInBot",
+        allow: "/",
+        disallow: ["/admin", "/admin/", "/api/"],
+      },
+      {
+        userAgent: "Twitterbot",
+        allow: "/",
+        disallow: ["/admin", "/admin/", "/api/"],
+      },
+      {
+        userAgent: "facebookexternalhit",
+        allow: "/",
+        disallow: ["/admin", "/admin/", "/api/"],
+      },
     ],
     sitemap: `${site}/sitemap.xml`,
     host: site,

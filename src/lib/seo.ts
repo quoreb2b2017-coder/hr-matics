@@ -13,6 +13,15 @@ export const SEO_LIMITS = {
 
 export const META_TITLE_BRAND = " | HRmatics";
 
+/** One brand suffix. Stored meta titles already end with "| HRmatics". */
+export function documentTitle(title: string): string {
+  const core = title
+    .replace(/\s*[|\-–—]\s*HRmatics\s*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return core ? `${core}${META_TITLE_BRAND}` : "HRmatics";
+}
+
 export function parseKeywordList(raw: string | null | undefined): string[] {
   if (!raw) return [];
   return raw

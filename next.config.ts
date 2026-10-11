@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Social crawlers (and the Alli proxy in front of them) must see
+  // title, description, and og:image in the first HTML chunk. Streaming
+  // those tags into the body is what LinkedIn reports as an empty page.
+  htmlLimitedBots: /.*/,
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.pexels.com" },

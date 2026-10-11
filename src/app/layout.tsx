@@ -72,6 +72,27 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "HRmatics",
+    title: "HRmatics | The People Operations Brief",
+    description:
+      "Intelligence, news, and playbooks for the people who run people operations. Compliance, talent, total rewards, HR technology, and culture, decoded for HR leaders.",
+    url: SITE_URL,
+    locale: "en_US",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "HRmatics",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HRmatics | The People Operations Brief",
+    description:
+      "Intelligence, news, and playbooks for the people who run people operations. Compliance, talent, total rewards, HR technology, and culture, decoded for HR leaders.",
+    images: ["/twitter-image"],
   },
 };
 

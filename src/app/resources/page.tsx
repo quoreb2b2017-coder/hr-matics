@@ -4,9 +4,33 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Resource Library - HRmatics",
+  title: "Resource Library",
   description:
     "Whitepapers, research reports, webinars, and playbooks for HR leaders. Free with registration.",
+  openGraph: {
+    title: "Resource Library",
+    description:
+      "Whitepapers, research reports, webinars, and playbooks for HR leaders. Free with registration.",
+    url: "/resources",
+    siteName: "HRmatics",
+    type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "HRmatics",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Resource Library",
+    description:
+      "Whitepapers, research reports, webinars, and playbooks for HR leaders.",
+    images: ["/twitter-image"],
+  },
 };
 
 const RESOURCES = [
