@@ -1,9 +1,36 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const SHARE_CACHE = "public, max-age=600, s-maxage=600";
+
+function isSharePath(pathname: string) {
+  return (
+    pathname === "/" ||
+    pathname === "/about" ||
+    pathname === "/resources" ||
+    pathname === "/privacy" ||
+    pathname.startsWith("/article/") ||
+    pathname.startsWith("/topic/")
+  );
+}
+
 // Next.js 16 renamed the middleware.ts convention to proxy.ts - same
 // location/behavior, new export name. Guards /admin/** (except /admin/login).
 export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Public pages must stay cacheable. LinkedIn treats max-age=0 as an empty page.
+  // Do this before any auth work so these routes never redirect to login.
+  if (isSharePath(pathname)) {
+    const response = NextResponse.next();
+    response.headers.set("Cache-Control", SHARE_CACHE);
+    return response;
+  }
+
+  if (!pathname.startsWith("/admin") && !pathname.startsWith("/api/admin")) {
+    return NextResponse.next();
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -31,7 +58,6 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
   const isApiAdmin = pathname.startsWith("/api/admin");
   const isLoginPage = pathname === "/admin/login";
 
@@ -55,5 +81,14 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: [
+    "/",
+    "/about",
+    "/resources",
+    "/privacy",
+    "/article/:path*",
+    "/topic/:path*",
+    "/admin/:path*",
+    "/api/admin/:path*",
+  ],
 };

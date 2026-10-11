@@ -23,7 +23,6 @@ type SitemapArticle = {
   slug: string;
   updated_at: string | null;
   published_at: string | null;
-  cover_image_url: string | null;
   topic: { slug: string } | { slug: string }[] | null;
 };
 
@@ -41,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const { data: articles, error: articlesError } = await supabase
     .from("articles")
-    .select("slug, updated_at, published_at, cover_image_url, topic:topics(slug)")
+    .select("slug, updated_at, published_at, topic:topics(slug)")
     .eq("status", "published")
     .not("published_at", "is", null)
     .lte("published_at", nowIso)
@@ -97,10 +96,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const publishedAt = lastMod(a.published_at);
     const ageMs = publishedAt ? Date.now() - publishedAt.getTime() : Infinity;
     const fresh = ageMs < 1000 * 60 * 60 * 24 * 3;
-    const images =
-      a.cover_image_url && /^https?:\/\//i.test(a.cover_image_url)
-        ? [a.cover_image_url]
-        : undefined;
+    // First-party 1200×630 card. The stored Pexels cover is often 940px wide,
+    // which is what Alli copies into og:image for crawlers.
+    const images = [absUrl(site, `/article/${a.slug}/opengraph-image`)];
 
     return {
       url: absUrl(site, `/article/${a.slug}`),

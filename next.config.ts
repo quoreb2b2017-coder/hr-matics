@@ -27,6 +27,32 @@ const nextConfig: NextConfig = {
         source: "/robots.txt",
         headers: [{ key: "Cache-Control", value: "public, max-age=86400" }],
       },
+      // LinkedIn's crawler drops responses it is not allowed to store.
+      // Next otherwise sends max-age=0 on these pages.
+      {
+        source: "/",
+        headers: [{ key: "Cache-Control", value: "public, max-age=600, s-maxage=600" }],
+      },
+      {
+        source: "/article/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=600, s-maxage=600" }],
+      },
+      {
+        source: "/topic/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=600, s-maxage=600" }],
+      },
+      {
+        source: "/about",
+        headers: [{ key: "Cache-Control", value: "public, max-age=600, s-maxage=600" }],
+      },
+      {
+        source: "/resources",
+        headers: [{ key: "Cache-Control", value: "public, max-age=600, s-maxage=600" }],
+      },
+      {
+        source: "/privacy",
+        headers: [{ key: "Cache-Control", value: "public, max-age=600, s-maxage=600" }],
+      },
     ];
   },
 };
