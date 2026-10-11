@@ -10,11 +10,16 @@ export function createPublicClient() {
     {
       auth: { persistSession: false, autoRefreshToken: false },
       global: {
-        fetch: (input, init) =>
-          fetch(input, {
-            ...init,
-            next: { revalidate: 300 },
-          }),
+        fetch: (input, init) => {
+          const nextInit = { ...(init ?? {}) } as RequestInit & {
+            next?: { revalidate?: number };
+          };
+          // A no-store fetch opts the whole article page out of caching.
+          // LinkedIn then reports the URL as an empty page.
+          delete nextInit.cache;
+          nextInit.next = { ...nextInit.next, revalidate: 300 };
+          return fetch(input, nextInit);
+        },
       },
     },
   );

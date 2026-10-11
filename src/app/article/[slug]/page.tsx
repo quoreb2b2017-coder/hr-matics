@@ -14,11 +14,19 @@ import {
   getArticleBySlug,
   getArticlesByTopicSlug,
   getLatestArticles,
+  getLatestArticlesPublic,
 } from "@/lib/articles";
 import { parseKeywordList, hydrateArticleSeo, documentTitle } from "@/lib/seo";
+import { enlargeCoverUrl } from "@/lib/ai/pexels";
 import { getSiteUrl } from "@/lib/site";
 
 export const revalidate = 300;
+export const fetchCache = "force-cache";
+
+export async function generateStaticParams() {
+  const articles = await getLatestArticlesPublic(100);
+  return articles.map((article) => ({ slug: article.slug }));
+}
 
 export async function generateMetadata({
   params,
@@ -114,6 +122,7 @@ export default async function ArticlePage({
   ]);
 
   const moreInTopic = related.slice(0, 4);
+  const shareImage = enlargeCoverUrl(article.cover_image_url);
   const siteUrl = getSiteUrl();
   const seo = hydrateArticleSeo(article, article.topic?.name);
   const topicSlug = article.topic?.slug ?? "";
@@ -139,7 +148,7 @@ export default async function ArticlePage({
           description: seo.metaDescription || article.dek,
           abstract: seo.geoSummary || article.dek,
           keywords: seo.keywords,
-          image: article.cover_image_url ? [article.cover_image_url] : undefined,
+          image: shareImage ? [shareImage] : undefined,
           datePublished: article.published_at,
           dateModified: article.updated_at,
           author: { "@type": "Organization", name: article.author_name },
@@ -232,7 +241,7 @@ export default async function ArticlePage({
               <figure className="art-cover-wrap">
                 <div className="art-cover">
                   <CoverImage
-                    src={article.cover_image_url}
+                    src={shareImage}
                     alt={article.cover_image_alt}
                     seed={article.slug}
                     label={article.topic?.name}

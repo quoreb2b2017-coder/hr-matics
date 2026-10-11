@@ -6,13 +6,18 @@ import TopicHero from "@/components/topic/TopicHero";
 import FeaturedStory from "@/components/topic/FeaturedStory";
 import TopicStoryCard from "@/components/StoryCard";
 import TopicNewsletterBand from "@/components/topic/TopicNewsletterBand";
-import { getTopicConfig } from "@/lib/topic-config";
+import { getNavTopics, getTopicConfig } from "@/lib/topic-config";
 import { getTopicBySlug } from "@/lib/topics";
 import { getArticlesByTopicSlug } from "@/lib/articles";
 import { articlesToStories, syntheticTopic } from "@/lib/topic-stories";
 import { getSiteUrl } from "@/lib/site";
 
 export const revalidate = 300;
+export const fetchCache = "force-cache";
+
+export function generateStaticParams() {
+  return getNavTopics().map((topic) => ({ slug: topic.slug }));
+}
 
 export async function generateMetadata({
   params,

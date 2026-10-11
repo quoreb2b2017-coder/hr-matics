@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { enlargeCoverUrl } from "@/lib/ai/pexels";
 
 export const OG_SIZE = { width: 1200, height: 630 };
 export const OG_CONTENT_TYPE = "image/png";
@@ -20,24 +21,7 @@ function fit(text: string, max: number): string {
   return `${core}…`;
 }
 
-/** Ask Pexels for a wide file. LinkedIn ignores images under 1200px. */
-export function enlargeCoverUrl(url: string | null | undefined): string | null {
-  if (!url) return null;
-  try {
-    const parsed = new URL(url);
-    if (parsed.hostname === "images.pexels.com") {
-      parsed.searchParams.set("auto", "compress");
-      parsed.searchParams.set("cs", "tinysrgb");
-      parsed.searchParams.delete("dpr");
-      parsed.searchParams.delete("h");
-      parsed.searchParams.set("w", "1600");
-      return parsed.toString();
-    }
-    return url;
-  } catch {
-    return url;
-  }
-}
+export { enlargeCoverUrl };
 
 export async function coverDataUrl(
   url: string | null | undefined,

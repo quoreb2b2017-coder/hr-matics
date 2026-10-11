@@ -21,6 +21,25 @@ interface PexelsSearchResponse {
   total_results: number;
 }
 
+/** Ask Pexels for a wide file. LinkedIn ignores images under 1200px. */
+export function enlargeCoverUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === "images.pexels.com") {
+      parsed.searchParams.set("auto", "compress");
+      parsed.searchParams.set("cs", "tinysrgb");
+      parsed.searchParams.delete("dpr");
+      parsed.searchParams.delete("h");
+      parsed.searchParams.set("w", "1600");
+      return parsed.toString();
+    }
+    return url;
+  } catch {
+    return url;
+  }
+}
+
 /** Extract a stable photo id from a Pexels CDN URL when possible. */
 export function pexelsPhotoKey(url: string | null | undefined): string | null {
   if (!url) return null;
