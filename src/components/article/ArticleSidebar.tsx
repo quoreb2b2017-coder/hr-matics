@@ -1,6 +1,7 @@
 import Link from "next/link";
 import CoverImage from "@/components/CoverImage";
 import ArticleToc from "@/components/article/ArticleToc";
+import { formatPublishDate } from "@/lib/format-date";
 import type { TocItem } from "@/lib/article-toc";
 import type { ArticleWithTopic } from "@/types/database";
 
@@ -57,6 +58,14 @@ export default function ArticleSidebar({
                     </span>
                     <span className="art-rail-copy">
                       <span className="art-rail-meta">
+                        {formatPublishDate(story.published_at) ? (
+                          <>
+                            <time dateTime={story.published_at ?? undefined}>
+                              {formatPublishDate(story.published_at)}
+                            </time>
+                            {" · "}
+                          </>
+                        ) : null}
                         {story.read_time_minutes ?? 5} min read
                       </span>
                       <span className="art-rail-title">{story.title}</span>

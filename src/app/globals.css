@@ -1567,24 +1567,93 @@ img {
 
 .art-share {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
+  margin-left: auto;
 }
 
 .art-share a {
-  width: 34px;
-  height: 34px;
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  color: var(--mute);
-  transition: 0.15s;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px 0 8px;
+  border: 1px solid rgba(10, 102, 194, 0.22);
+  border-radius: 999px;
+  color: #0a3d6e;
+  background: #fff;
+  font-family: var(--font-libre), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+  transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.art-share a .li-mark {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 4px;
 }
 
 .art-share a:hover {
-  border-color: var(--emerald);
-  color: var(--emerald);
+  border-color: #0a66c2;
+  background: #f3f8fc;
+  color: #0a66c2;
+  box-shadow: 0 2px 8px rgba(10, 102, 194, 0.12);
+}
+
+.art-share a.art-share-li {
+  background: #0a66c2;
+  border-color: #0a66c2;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.art-share a.art-share-li .li-mark {
+  background: #fff;
+  padding: 2px;
+  border-radius: 5px;
+  box-sizing: content-box;
+}
+
+.art-share a.art-share-li:hover {
+  background: #004182;
+  border-color: #004182;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(10, 102, 194, 0.28);
+}
+
+.art-share a.art-share-follow {
+  background: #0a66c2;
+  border-color: #0a66c2;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding-right: 14px;
+}
+
+.art-share a.art-share-follow .li-mark {
+  background: #fff;
+  padding: 2px;
+  border-radius: 5px;
+  box-sizing: content-box;
+}
+
+.art-share a.art-share-follow:hover {
+  background: #004182;
+  border-color: #004182;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(10, 102, 194, 0.28);
+}
+
+@media (max-width: 720px) {
+  .art-share {
+    margin-left: 0;
+  }
 }
 
 .article-page {
@@ -6244,6 +6313,20 @@ button.flag-cta {
   background: rgba(238, 106, 77, 0.1);
   border-color: var(--signal);
   color: var(--signal-deep);
+}
+
+.hr-foot .socials a.social-linkedin {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+}
+
+.hr-foot .socials a.social-linkedin:hover {
+  background: rgba(10, 102, 194, 0.08);
+  border-color: transparent;
+  color: inherit;
 }
 
 .hr-foot .foot-col {

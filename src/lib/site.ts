@@ -2,6 +2,13 @@ import { revalidatePath } from "next/cache";
 
 const PRODUCTION_SITE_URL = "https://www.hrmatics.net";
 
+/** HRmatics LinkedIn showcase. Used for follow links and article share. */
+export const LINKEDIN_PAGE = "https://www.linkedin.com/showcase/hrmatics/posts/";
+
+export function linkedInShareUrl(pageUrl: string): string {
+  return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`;
+}
+
 function isLocalhostUrl(url: string): boolean {
   return /localhost|127\.0\.0\.1/i.test(url);
 }

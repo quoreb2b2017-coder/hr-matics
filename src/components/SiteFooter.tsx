@@ -1,7 +1,9 @@
 import Link from "next/link";
 import BrandLogo from "@/components/BrandLogo";
+import LinkedInMark from "@/components/LinkedInMark";
 import CookiePreferencesTrigger from "@/components/CookiePreferencesTrigger";
 import { getNavTopics } from "@/lib/topic-config";
+import { LINKEDIN_PAGE } from "@/lib/site";
 
 export default function SiteFooter() {
   const navTopics = getNavTopics();
@@ -37,14 +39,13 @@ export default function SiteFooter() {
             </p>
             <div className="socials">
               <a
-                href="https://www.linkedin.com"
-                aria-label="LinkedIn"
+                className="social-linkedin"
+                href={LINKEDIN_PAGE}
+                aria-label="HRmatics on LinkedIn"
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                  <path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.5 8h4V24h-4V8zM8 8h3.8v2.2h.05c.53-1 1.83-2.2 3.77-2.2 4.03 0 4.78 2.65 4.78 6.1V24h-4v-6.9c0-1.65-.03-3.77-2.3-3.77-2.3 0-2.65 1.8-2.65 3.65V24H8V8z" />
-                </svg>
+                <LinkedInMark size={22} />
               </a>
               <a
                 href="https://x.com"

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CoverImage from "@/components/CoverImage";
+import { formatPublishDate } from "@/lib/format-date";
 import { storyHref } from "@/lib/story-link";
 import type { TopicStory } from "@/lib/topic-stories";
 
@@ -19,6 +20,15 @@ export default function StoryCard({ story }: { story: TopicStory }) {
       <div className="home-story-copy">
         <span className="home-story-meta">
           {story.topicName} &middot; {story.readMinutes} min read
+          {story.publishedAt ? (
+            <>
+              {" "}
+              &middot;{" "}
+              <time dateTime={story.publishedAt}>
+                {formatPublishDate(story.publishedAt)}
+              </time>
+            </>
+          ) : null}
         </span>
         <h3>
           <Link href={href}>{story.title}</Link>

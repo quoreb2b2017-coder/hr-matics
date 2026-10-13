@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import LinkedInMark from "@/components/LinkedInMark";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ArticleBody from "@/components/ArticleBody";
@@ -18,7 +19,8 @@ import {
 } from "@/lib/articles";
 import { parseKeywordList, hydrateArticleSeo, documentTitle } from "@/lib/seo";
 import { enlargeCoverUrl } from "@/lib/ai/pexels";
-import { getSiteUrl } from "@/lib/site";
+import { formatPublishDate } from "@/lib/format-date";
+import { getSiteUrl, LINKEDIN_PAGE, linkedInShareUrl } from "@/lib/site";
 
 export const revalidate = 300;
 export const fetchCache = "force-cache";
@@ -94,15 +96,6 @@ export async function generateMetadata({
   };
 }
 
-function formatDateLong(iso: string | null) {
-  if (!iso) return "";
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(iso));
-}
-
 export default async function ArticlePage({
   params,
 }: {
@@ -124,6 +117,8 @@ export default async function ArticlePage({
   const moreInTopic = related.slice(0, 4);
   const shareImage = enlargeCoverUrl(article.cover_image_url);
   const siteUrl = getSiteUrl();
+  const articleUrl = `${siteUrl}/article/${article.slug}`;
+  const publishedLabel = formatPublishDate(article.published_at, "long");
   const seo = hydrateArticleSeo(article, article.topic?.name);
   const topicSlug = article.topic?.slug ?? "";
   const toc = getArticleToc(article.body_json);
@@ -227,13 +222,37 @@ export default async function ArticlePage({
                     <div>
                       <strong>{article.author_name}</strong>
                       <span>
-                        {formatDateLong(article.published_at)}
+                        {publishedLabel ? (
+                          <time dateTime={article.published_at ?? undefined}>
+                            Published {publishedLabel}
+                          </time>
+                        ) : null}
                         <span className="art-dot" aria-hidden>
                           ·
                         </span>
                         {article.read_time_minutes ?? 5} min read
                       </span>
                     </div>
+                  </div>
+                  <div className="art-share">
+                    <a
+                      className="art-share-li"
+                      href={linkedInShareUrl(articleUrl)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <LinkedInMark size={18} />
+                      Share on LinkedIn
+                    </a>
+                    <a
+                      className="art-share-follow"
+                      href={LINKEDIN_PAGE}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <LinkedInMark size={16} />
+                      HRmatics on LinkedIn
+                    </a>
                   </div>
                 </div>
               </header>

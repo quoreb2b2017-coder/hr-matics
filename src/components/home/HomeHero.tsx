@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CoverImage from "@/components/CoverImage";
+import { formatPublishDate } from "@/lib/format-date";
 import { getNavTopics } from "@/lib/topic-config";
 import { storyHref } from "@/lib/story-link";
 import type { TopicStory } from "@/lib/topic-stories";
@@ -44,6 +45,14 @@ export default function HomeHero({ lead }: { lead: TopicStory }) {
               <span>{lead.authorName}</span>
               <span className="dot" aria-hidden />
               <span>{lead.readMinutes} min read</span>
+              {lead.publishedAt ? (
+                <>
+                  <span className="dot" aria-hidden />
+                  <time dateTime={lead.publishedAt}>
+                    {formatPublishDate(lead.publishedAt)}
+                  </time>
+                </>
+              ) : null}
             </div>
 
             <Link href={href} className="hr-hero-cta">
