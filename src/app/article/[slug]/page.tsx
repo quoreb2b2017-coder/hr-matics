@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import LinkedInMark from "@/components/LinkedInMark";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ArticleBody from "@/components/ArticleBody";
@@ -9,6 +8,7 @@ import CoverImage from "@/components/CoverImage";
 import JsonLd from "@/components/JsonLd";
 import ArticleSidebar from "@/components/article/ArticleSidebar";
 import ArticleRelated from "@/components/article/ArticleRelated";
+import ArticleShareButtons from "@/components/article/ArticleShareButtons";
 import SubscribePopup from "@/components/SubscribePopup";
 import { getArticleToc } from "@/lib/article-toc";
 import {
@@ -20,7 +20,7 @@ import {
 import { parseKeywordList, hydrateArticleSeo, documentTitle } from "@/lib/seo";
 import { enlargeCoverUrl } from "@/lib/ai/pexels";
 import { formatPublishDate } from "@/lib/format-date";
-import { getSiteUrl, LINKEDIN_PAGE, linkedInShareUrl } from "@/lib/site";
+import { getSiteUrl } from "@/lib/site";
 
 export const revalidate = 300;
 export const fetchCache = "force-cache";
@@ -234,26 +234,7 @@ export default async function ArticlePage({
                       </span>
                     </div>
                   </div>
-                  <div className="art-share">
-                    <a
-                      className="art-share-li"
-                      href={linkedInShareUrl(articleUrl)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <LinkedInMark size={18} />
-                      Share on LinkedIn
-                    </a>
-                    <a
-                      className="art-share-follow"
-                      href={LINKEDIN_PAGE}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <LinkedInMark size={16} />
-                      HRmatics on LinkedIn
-                    </a>
-                  </div>
+                  <ArticleShareButtons url={articleUrl} title={article.title} />
                 </div>
               </header>
 

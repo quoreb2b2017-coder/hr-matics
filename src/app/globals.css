@@ -1567,87 +1567,71 @@ img {
 
 .art-share {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin-left: auto;
 }
 
-.art-share a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 14px 0 8px;
-  border: 1px solid rgba(10, 102, 194, 0.22);
-  border-radius: 999px;
-  color: #0a3d6e;
+.art-share-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 10px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid #e2e8f0;
   background: #fff;
-  font-family: var(--font-libre), sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1;
+  color: #475569;
+  cursor: pointer;
   text-decoration: none;
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
-  transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
 }
 
-.art-share a .li-mark {
-  display: block;
-  flex-shrink: 0;
-  border-radius: 4px;
+.art-share-btn:hover {
+  transform: translateY(-1px);
 }
 
-.art-share a:hover {
-  border-color: #0a66c2;
-  background: #f3f8fc;
+.art-share-btn:focus-visible {
+  outline: 2px solid #0a66c2;
+  outline-offset: 2px;
+}
+
+.art-share-copy:hover {
+  border-color: #cbd5e1;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+.art-share-native {
+  background: #eef6fd;
+  border-color: #cfe3f7;
   color: #0a66c2;
-  box-shadow: 0 2px 8px rgba(10, 102, 194, 0.12);
 }
 
-.art-share a.art-share-li {
+.art-share-native:hover {
+  background: #e1effb;
+  border-color: #9fc8ee;
+  color: #004182;
+}
+
+.art-share-li {
   background: #0a66c2;
   border-color: #0a66c2;
-  color: #fff;
-  font-weight: 700;
-  letter-spacing: 0.01em;
 }
 
-.art-share a.art-share-li .li-mark {
-  background: #fff;
-  padding: 2px;
-  border-radius: 5px;
-  box-sizing: content-box;
-}
-
-.art-share a.art-share-li:hover {
+.art-share-li:hover {
   background: #004182;
   border-color: #004182;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(10, 102, 194, 0.28);
 }
 
-.art-share a.art-share-follow {
-  background: #0a66c2;
-  border-color: #0a66c2;
-  color: #fff;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  padding-right: 14px;
+.art-share-li .li-mark {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 
-.art-share a.art-share-follow .li-mark {
-  background: #fff;
-  padding: 2px;
-  border-radius: 5px;
-  box-sizing: content-box;
-}
-
-.art-share a.art-share-follow:hover {
-  background: #004182;
-  border-color: #004182;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(10, 102, 194, 0.28);
+.art-share-li .li-mark path {
+  fill: #fff;
 }
 
 @media (max-width: 720px) {
