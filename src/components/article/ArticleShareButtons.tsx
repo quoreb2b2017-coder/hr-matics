@@ -3,13 +3,14 @@
 import { useState } from "react";
 import LinkedInMark from "@/components/LinkedInMark";
 
+const LINKEDIN_COMPANY = "https://www.linkedin.com/showcase/hrmatics/posts/";
+
 function linkedInShareHref(pageUrl: string) {
   return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`;
 }
 
 export default function ArticleShareButtons({
   url,
-  title,
 }: {
   url: string;
   title: string;
@@ -24,18 +25,6 @@ export default function ArticleShareButtons({
     } catch {
       // Clipboard can fail on insecure contexts; ignore.
     }
-  }
-
-  async function share() {
-    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-      try {
-        await navigator.share({ title, url });
-        return;
-      } catch {
-        // User cancelled or share failed — fall through to copy.
-      }
-    }
-    await copyLink();
   }
 
   return (
@@ -77,12 +66,13 @@ export default function ArticleShareButtons({
         )}
       </button>
 
-      <button
-        type="button"
+      <a
         className="art-share-btn art-share-native"
-        onClick={share}
-        aria-label="Share"
-        title="Share"
+        href={linkedInShareHref(url)}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Share on LinkedIn"
+        title="Share on LinkedIn"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
           <circle cx="18" cy="5" r="2.4" fill="currentColor" />
@@ -95,15 +85,15 @@ export default function ArticleShareButtons({
             strokeLinecap="round"
           />
         </svg>
-      </button>
+      </a>
 
       <a
         className="art-share-btn art-share-li"
-        href={linkedInShareHref(url)}
+        href={LINKEDIN_COMPANY}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Share on LinkedIn"
-        title="Share on LinkedIn"
+        aria-label="HRmatics on LinkedIn"
+        title="HRmatics on LinkedIn"
       >
         <LinkedInMark size={20} />
       </a>
